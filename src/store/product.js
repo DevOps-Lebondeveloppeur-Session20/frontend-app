@@ -5,6 +5,20 @@ console.log("VITE_API_URL=", apiUrl);
 
 export const useProductStore = create((set) => ({
   products: [],
+  count: null,
+
+  fetchCount: async () => {
+    try {
+      const res = await fetch(`${apiUrl}/api/products/count`);
+      const data = await res.json();
+      if (!data.success) return { success: false, message: data.message };
+      set({ count: data.count });
+      return { success: true };
+    } catch (error) {
+      console.error("Error fetching product count:", error);
+      return { success: false, message: "Failed to fetch product count." };
+    }
+  },
 
   setProducts: (products) => set({ products }),
 
